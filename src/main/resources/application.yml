@@ -1,0 +1,11 @@
+server:
+  port: 5555
+
+spring:
+  application:
+    name: expense-service
+  datasource:
+    url: jdbc:postgresql://postgredb-1.cxpcrenyzzbl.us-east-2.rds.amazonaws.com:5432/jtraining?user=invauser&password=teVdInyxKGdJhRfOMip1&sslmode=require
+  jpa:
+    show-sql: true
+    generate-ddl: false
