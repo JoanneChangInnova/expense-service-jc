@@ -1,15 +1,19 @@
 package com.joanne.expenseservice.entity
 
+import com.joanne.expenseservice.annotation.NoArg
+import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 
-data class Users(
+@Entity
+@NoArg
+class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id:Long,
-    val name:String,
-    val account:String,
-    val password:String,
-    val roleId:Long
+    var id:Long?,
+    var name:String?,
+    var account:String?,
+    var password:String?,
+    var roleId:Long?
 )

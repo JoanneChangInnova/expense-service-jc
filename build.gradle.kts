@@ -3,8 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.6.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("org.jetbrains.kotlin.plugin.noarg") version "1.6.10"
 	kotlin("jvm") version "1.6.10"
 	kotlin("plugin.spring") version "1.6.10"
+}
+
+
+noArg {
+	annotation("com.joanne.expenseservice.annotation.NoArg")
+	invokeInitializers = true
 }
 
 group = "com.joanne"
@@ -31,9 +38,9 @@ dependencies {
 	implementation("com.vladmihalcea:hibernate-types-52:2.14.0")
 	implementation("com.google.code.gson:gson:2.8.5")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("io.springfox:springfox-boot-starter:3.0.0")
+//	implementation("io.springfox:springfox-boot-starter:3.0.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
-	implementation("au.com.console:kotlin-jpa-specification-dsl:2.0.0")
+//	implementation("au.com.console:kotlin-jpa-specification-dsl:2.0.0")
 	implementation("org.apache.commons:commons-lang3:3.12.0")
 	implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")
 	compileOnly("org.projectlombok:lombok")
