@@ -15,10 +15,18 @@ import org.springframework.web.bind.annotation.*
 class ApplyController(val applyservice: ApplyService) {
 
     @GetMapping("/apply")
-    fun test(@RequestBody applyDataQueryCondition: ApplyDataQueryCondition){
-        log.info("info test")
-        System.out.println("getMapping request body:"+applyDataQueryCondition)
-
+    /* request query string */
+    fun getApplyList(@RequestParam(required = false) userId: Long,
+                     @RequestParam(required = false) type: Int?,
+                     @RequestParam(required = false) status: Int?,
+                     @RequestParam(required = false) startTime: String?,
+                     @RequestParam(required = false) endTime: String?,
+                     @RequestParam(required = false, defaultValue = "0")page: Int,
+                     @RequestParam(required = false, defaultValue = "10")pageSize: Int)
+    {
+        println("request userId:$userId")
+        val condition = ApplyDataQueryCondition(userId,null,type,status,startTime,endTime)
+        applyservice.getAllApplyList(condition,page,pageSize)
     }
 
 
