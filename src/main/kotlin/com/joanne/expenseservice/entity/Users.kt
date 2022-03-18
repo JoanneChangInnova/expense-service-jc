@@ -12,7 +12,7 @@ class Users(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     var id:Long?,
-    var name:String?,
+    var username:String?,
     var account:String?,
     var password:String?,
     var roleId:Long?

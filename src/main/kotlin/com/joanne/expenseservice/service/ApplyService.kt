@@ -4,38 +4,34 @@ import com.joanne.expenseservice.entity.Expense
 import com.joanne.expenseservice.repository.ExpenseRepository
 import com.joanne.expenseservice.repository.UsersRepository
 import com.joanne.expenseservice.vo.ApplyDataQueryCondition
-import org.apache.commons.lang3.time.DateUtils
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import au.com.console.jpaspecificationdsl.*
+import com.joanne.expenseservice.utils.DateUtils.dateStrToIsoDate
+import com.joanne.expenseservice.vo.ApplyData
+import com.joanne.expenseservice.vo.ExpenseVo
+
 
 @Service
 class ApplyService
     (
     val usersRepository: UsersRepository,
     val expenseRepository: ExpenseRepository
-    )
-{
+) {
 
-    fun getAllApplyList(condition: ApplyDataQueryCondition, page: Int, pageSize: Int) {
-        val pageRequest= PageRequest.of(page,pageSize, Sort.by("id"))
-        val pageRequest2= PageRequest.of(page,pageSize) //see diff
+    fun getAllApplyList(condition: ApplyDataQueryCondition, page: Int, pageSize: Int): ExpenseVo {
+        val pageRequest = PageRequest.of(page, pageSize, Sort.by("id"))
+        val pageRequest2 = PageRequest.of(page, pageSize)  //todo: see diff
         val user = usersRepository.getById(condition.userId)
-        if(user != null){
-            val roleId = user.roleId
-            condition.roleId = roleId
-            println("roleId= $roleId")
-        }else throw Exception("User not found!")
-        expenseRepository.findAll(condirion,pageRequest)
-
-
+        condition.roleId = user.roleId
+        val result = expenseRepository.findAll(generateSpecification(condition), pageRequest)
+        return ExpenseVo(result.totalElements, result.totalPages, result.content)
     }
 
     fun generateSpecification(condition: ApplyDataQueryCondition): Specification<Expense>? = condition?.let {
         var specList: ArrayList<Specification<Expense>> = arrayListOf()
-        // to check if user's role is user, just find its own data
         if (condition != null && condition.roleId == 2L) {
             specList.add(Expense::userId.equal(it.userId))
         }
@@ -48,11 +44,16 @@ class ApplyService
         if (it.startTime != null && it.endTime != null) {
             specList.add(
                 Expense::createTime.between(
-                    DateUtils.dateStrToIsoDate(it.startTime),
-                    DateUtils.dateStrToIsoDate(it.endTime)
+                    dateStrToIsoDate(it.startTime),
+                    dateStrToIsoDate(it.endTime)
                 )
             )
         }
         return and(specList)
+    }
+
+    fun createExpense(applyData: ApplyData){
+//        val expense= Expense(applyData.userId,applyData.type,)
+//        expenseRepository.save()
     }
 }
