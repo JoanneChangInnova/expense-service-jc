@@ -89,4 +89,6 @@ class ApplyService
         )
     }
 
+    fun getExpenseById(id: Long) = expenseRepository.findById(id)
+
 }

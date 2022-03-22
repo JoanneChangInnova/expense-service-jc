@@ -9,4 +9,35 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: false
-    
+
+#  notification-service
+activemq:
+  #    user: admin
+  #    password: admin
+  #    broker-url: tcp://localhost:61616
+  in-memory: true
+  pool:
+    enabled: false
+    max-connections: 50
+  packages:
+    trust-all: true
+  jms:
+    pub-sub-domain: false
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: anchiao0417@gmail.com
+    password: Gn00604972
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+camel:
+  springboot:
+    xml-routes: classpath:./spring/camel-context.xml
+
+

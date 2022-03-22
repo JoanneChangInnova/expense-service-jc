@@ -6,6 +6,7 @@ import com.joanne.expenseservice.repository.ExpenseRepository
 import com.joanne.expenseservice.vo.ExamineExpenseVo
 import com.joanne.expenseservice.vo.QueueMsg
 import com.joanne.expenseservice.vo.ResponseVo
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jms.core.JmsMessagingTemplate
 import org.springframework.stereotype.Service
 
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service
 class ExamineService(private val expenseRepository: ExpenseRepository) {
 
     private val gson: Gson = Gson()
+
+    @Autowired
     private val jmsMessagingTemplate= JmsMessagingTemplate()
 
     fun examine(expenseId: Long, examineExpenseVo: ExamineExpenseVo): ResponseVo<Expense> {
@@ -29,6 +32,7 @@ class ExamineService(private val expenseRepository: ExpenseRepository) {
         validExpense.admin_reason = examineExpenseVo.adminReason
         validExpense.applyInfo = gson.toJson(examineExpenseVo)
         expenseRepository.save(validExpense)
+
         var qMsg= QueueMsg("Expense ID: $expenseId, has been updated")
         jmsMessagingTemplate.convertAndSend("applier-queue", gson.toJson(qMsg))
         return ResponseVo(200, "update Expense succesfully", validExpense)

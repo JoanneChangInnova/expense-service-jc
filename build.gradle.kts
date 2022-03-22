@@ -30,6 +30,10 @@ repositories {
 }
 
 dependencies {
+	implementation("javax.mail:mail:1.4")
+	implementation("org.apache.camel.springboot:camel-jackson-starter:3.8.0")
+	implementation("org.apache.camel.springboot:camel-activemq-starter:3.8.0")
+	implementation("org.springframework:spring-context-support:5.3.15")
 	implementation("org.springframework.boot:spring-boot-starter-activemq")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

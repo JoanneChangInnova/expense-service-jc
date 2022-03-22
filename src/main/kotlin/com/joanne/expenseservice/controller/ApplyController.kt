@@ -2,6 +2,7 @@ package com.joanne.expenseservice.controller
 
 import com.google.gson.Gson
 import com.joanne.expenseservice.annotation.Slf4j
+import com.joanne.expenseservice.entity.Expense
 import com.joanne.expenseservice.enum.ExpenseStatus
 import com.joanne.expenseservice.enum.ExpenseType
 
@@ -62,5 +63,16 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
             return ResponseVo(400, "Failed to apply expense", null)
         }
 
+    }
+
+    @GetMapping("/apply/{id}")
+    fun getExpenseInfoById(@PathVariable("id") expenseId: Long): ResponseVo<Expense> {
+        try {
+            var result = applyservice.getExpenseById(expenseId)
+            return ResponseVo(200, "get expense info successfully", result.get())
+        } catch (e: Exception) {
+            println("Failed to get expense info, id: $expenseId")
+            return ResponseVo(400, "Failed to get expense info", null)
+        }
     }
 }
