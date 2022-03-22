@@ -45,6 +45,7 @@ dependencies {
 	implementation("au.com.console:kotlin-jpa-specification-dsl:2.0.0")
 	implementation("org.apache.commons:commons-lang3:3.12.0")
 	implementation("io.github.microutils:kotlin-logging-jvm:2.0.6")
+	implementation("org.springframework:spring-jms:5.3.16")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")

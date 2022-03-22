@@ -6,7 +6,7 @@ import com.joanne.expenseservice.entity.Expense
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class ExpenseVo(
+data class ExpensePageVo(
     var totalElements: Long?,
     var totalPages: Int?,
     var expenses: List<Expense>?

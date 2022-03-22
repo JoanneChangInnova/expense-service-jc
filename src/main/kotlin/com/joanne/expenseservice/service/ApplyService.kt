@@ -9,9 +9,15 @@ import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import au.com.console.jpaspecificationdsl.*
+import com.google.gson.Gson
+import com.joanne.expenseservice.enum.ExpenseStatus
 import com.joanne.expenseservice.utils.DateUtils.dateStrToIsoDate
 import com.joanne.expenseservice.vo.ApplyData
-import com.joanne.expenseservice.vo.ExpenseVo
+import com.joanne.expenseservice.vo.ExpensePageVo
+import org.springframework.beans.factory.annotation.Autowired
+import java.util.*
+import kotlin.collections.ArrayList
+import org.springframework.jms.core.JmsMessagingTemplate
 
 
 @Service
@@ -21,13 +27,18 @@ class ApplyService
     val expenseRepository: ExpenseRepository
 ) {
 
-    fun getAllApplyList(condition: ApplyDataQueryCondition, page: Int, pageSize: Int): ExpenseVo {
+    private val gson: Gson = Gson()
+
+    @Autowired
+    private val jmsMessagingTemplate = JmsMessagingTemplate()
+
+    fun getAllApplyList(condition: ApplyDataQueryCondition, page: Int, pageSize: Int): ExpensePageVo {
         val pageRequest = PageRequest.of(page, pageSize, Sort.by("id"))
         val pageRequest2 = PageRequest.of(page, pageSize)  //todo: see diff
         val user = usersRepository.getById(condition.userId)
         condition.roleId = user.roleId
         val result = expenseRepository.findAll(generateSpecification(condition), pageRequest)
-        return ExpenseVo(result.totalElements, result.totalPages, result.content)
+        return ExpensePageVo(result.totalElements, result.totalPages, result.content)
     }
 
     fun generateSpecification(condition: ApplyDataQueryCondition): Specification<Expense>? = condition?.let {
@@ -53,7 +64,29 @@ class ApplyService
     }
 
     fun createExpense(applyData: ApplyData){
-//        val expense= Expense(applyData.userId,applyData.type,)
-//        expenseRepository.save()
+        var expense= Expense(
+            applyData.userId,
+            applyData.type,
+            ExpenseStatus.Submitted.code,
+            applyData.amount,
+            applyData.reason,
+            Date(),
+            applyData.startTime,
+            applyData.endTime,
+            applyData?.adminReason
+        )
+        expense.applyInfo=gson.toJson(expense)
+        println("expense gson= "+gson.toJson(expense))
+        expenseRepository.save(expense)
+        sendMsg(expense.userId)
     }
+
+    fun sendMsg(userId:Long){
+        //todo: trace process
+        jmsMessagingTemplate.convertAndSend(
+            "approver-queue",
+            "userID: ${userId}, has requested an expense application"
+        )
+    }
+
 }
