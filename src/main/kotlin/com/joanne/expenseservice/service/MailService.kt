@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 
 @Service
-class MailService(var javaMailSender: JavaMailSender) {
+class MailService(@Autowired var javaMailSender: JavaMailSender) {
 
     fun mailSender(mailObject: MailObject){
         var message= SimpleMailMessage()

@@ -11,15 +11,15 @@ spring:
     generate-ddl: false
 
 #  notification-service
-activemq:
-  #    user: admin
-  #    password: admin
-  #    broker-url: tcp://localhost:61616
-  in-memory: true
-  pool:
-    enabled: false
-    max-connections: 50
-  packages:
+  activemq:
+    #    user: admin
+    #    password: admin
+    #    broker-url: tcp://localhost:61616
+    in-memory: true
+    pool:
+      enabled: false
+      max-connections: 50
+    packages:
     trust-all: true
   jms:
     pub-sub-domain: false
@@ -28,7 +28,7 @@ activemq:
     host: smtp.gmail.com
     port: 587
     username: anchiao0417@gmail.com
-    password: Gn00604972
+    password: vgansukkzdfpxagi
     properties:
       mail:
         smtp:

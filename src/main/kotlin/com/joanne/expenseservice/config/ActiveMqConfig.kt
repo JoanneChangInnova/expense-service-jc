@@ -20,8 +20,6 @@ class ActiveMqConfig {
     private var pwd= String()
     @Value("\${activemq.queueName}")
     private var queueName= String()
-//    @Value("\${topicName}")
-//    private var topicName= String()
     @Value("\${activemq.broker-url}")
     private var brokerUrl= String()
 
@@ -29,11 +27,6 @@ class ActiveMqConfig {
     fun queue():ActiveMQQueue{
         return ActiveMQQueue(queueName)
     }
-
-//    @Bean
-//    fun topic(): ActiveMQTopic {
-//        return ActiveMQTopic(topicName)
-//    }
 
     @Bean
     fun connectionFactory():ActiveMQConnectionFactory{
@@ -45,8 +38,4 @@ class ActiveMqConfig {
         return JmsTemplate(connectionFactory())
     }
 
-    @Bean
-    fun javaMailSender(): JavaMailSender? {
-        return JavaMailSenderImpl()
-    }
 }
