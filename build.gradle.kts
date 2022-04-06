@@ -46,7 +46,7 @@ dependencies {
 	implementation ("com.google.code.gson:gson:2.8.5")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	//implementation("io.springfox:springfox-boot-starter:3.0.0")
+	implementation("io.springfox:springfox-boot-starter:3.0.0")
 	implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 	implementation("au.com.console:kotlin-jpa-specification-dsl:2.0.0")
 	implementation("org.apache.commons:commons-lang3:3.12.0")

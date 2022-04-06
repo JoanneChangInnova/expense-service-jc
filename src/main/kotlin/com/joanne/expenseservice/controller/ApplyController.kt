@@ -11,16 +11,20 @@ import com.joanne.expenseservice.vo.ApplyData
 import com.joanne.expenseservice.vo.ApplyDataQueryCondition
 import com.joanne.expenseservice.vo.ExpensePageVo
 import com.joanne.expenseservice.vo.ResponseVo
+import io.swagger.annotations.Api
+import io.swagger.annotations.ApiOperation
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping
 @RestController
 @CrossOrigin
 @Slf4j
+@Api(value = "Apply", tags = ["Expense Service"])
 class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gson()) {
 
     //todo: wait for showing user inserted expenses
     @GetMapping("/apply")
+    @ApiOperation("Get All Expense List")
     fun getAllApplyList(
         /* request query string */
         @RequestParam(required = false) userId: Long,
@@ -42,6 +46,7 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
 
 
     @PostMapping("/apply")
+    @ApiOperation("Apply new expense")
     fun applyExpense(@RequestBody applyData: ApplyData): ResponseVo<ExpensePageVo> {
         //這個log印不出東西？？是在搞笑？
 //        log.info("print request body:",applyDataQueryCondition.toString())
@@ -66,6 +71,7 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
     }
 
     @GetMapping("/apply/{id}")
+    @ApiOperation("Get Expense By Id")
     fun getExpenseInfoById(@PathVariable("id") expenseId: Long): ResponseVo<Expense> {
         try {
             var result = applyservice.getExpenseById(expenseId)

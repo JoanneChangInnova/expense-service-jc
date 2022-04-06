@@ -9,7 +9,12 @@ spring:
   jpa:
     show-sql: true
     generate-ddl: false
-
+# Swagger configuration
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    format:
+      date-time: iso
 #  notification-service
   activemq:
     #    user: admin
