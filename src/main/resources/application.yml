@@ -44,5 +44,9 @@ spring:
 camel:
   springboot:
     xml-routes: classpath:./spring/camel-context.xml
+#Enable debug level
+logging:
+  level:
+    com.joanne.expenseservice: DEBUG
 
 

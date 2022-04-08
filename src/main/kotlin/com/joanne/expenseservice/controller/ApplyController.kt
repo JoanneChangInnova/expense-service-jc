@@ -2,6 +2,7 @@ package com.joanne.expenseservice.controller
 
 import com.google.gson.Gson
 import com.joanne.expenseservice.annotation.Slf4j
+import com.joanne.expenseservice.annotation.Slf4j.Companion.log
 import com.joanne.expenseservice.entity.Expense
 import com.joanne.expenseservice.enum.ExpenseStatus
 import com.joanne.expenseservice.enum.ExpenseType
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.*
 @Api(value = "Apply", tags = ["Expense Service"])
 class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gson()) {
 
-    //todo: wait for showing user inserted expenses
     @GetMapping("/apply")
     @ApiOperation("Get All Expense List")
     fun getAllApplyList(
@@ -48,10 +48,8 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
     @PostMapping("/apply")
     @ApiOperation("Apply new expense")
     fun applyExpense(@RequestBody applyData: ApplyData): ResponseVo<ExpensePageVo> {
-        //這個log印不出東西？？是在搞笑？
-//        log.info("print request body:",applyDataQueryCondition.toString())
-//        log.info("print request body userId:",applyDataQueryCondition.userId)
-        println("print request body:$applyData")
+
+        log.debug("print request body:$applyData")
 
         try {
             if (ExpenseType.Traveling.code.equals(applyData.type) && applyData.amount > 5000) {
@@ -73,6 +71,12 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
     @GetMapping("/apply/{id}")
     @ApiOperation("Get Expense By Id")
     fun getExpenseInfoById(@PathVariable("id") expenseId: Long): ResponseVo<Expense> {
+        log.info("print info!!!!!:$expenseId")
+        log.warn("print warn:$expenseId")
+        log.error("print error:$expenseId")
+        println(log.isDebugEnabled) //false -> true
+        log.debug("print debug:$expenseId")  //does get evaluated after application.yml enabled debug level
+
         try {
             var result = applyservice.getExpenseById(expenseId)
             return ResponseVo(200, "get expense info successfully", result.get())
