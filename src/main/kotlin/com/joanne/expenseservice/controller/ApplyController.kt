@@ -14,6 +14,7 @@ import com.joanne.expenseservice.vo.ExpensePageVo
 import com.joanne.expenseservice.vo.ResponseVo
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping
@@ -38,9 +39,9 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
         return try {
             val condition = ApplyDataQueryCondition(userId, null, type, status, startTime, endTime)
             val expenseVo = applyservice.getAllApplyList(condition, page, pageSize)
-            ResponseVo(200, "succeeded", expenseVo)
+            ResponseVo(HttpStatus.ACCEPTED, "succeeded", expenseVo)
         } catch (e: Exception) {
-            ResponseVo(400, "failed"+e.stackTrace, null)
+            ResponseVo(HttpStatus.BAD_REQUEST, "failed"+e.stackTrace, null)
         }
     }
 
@@ -48,22 +49,19 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
     @PostMapping("/apply")
     @ApiOperation("Apply new expense")
     fun applyExpense(@RequestBody applyData: ApplyData): ResponseVo<ExpensePageVo> {
-
-        log.debug("print request body:$applyData")
-
         try {
             if (ExpenseType.Traveling.code.equals(applyData.type) && applyData.amount > 5000) {
-                return ResponseVo(400, "Failed to apply the traveling expense", null)
+                return ResponseVo(HttpStatus.BAD_REQUEST, "Failed to apply the traveling expense", null)
             }
             if (ExpenseType.GroupMeal.code.equals(applyData.type) && applyData.amount > 2000) {
-                return ResponseVo(400, "Failed to apply the group meal expense", null)
+                return ResponseVo(HttpStatus.BAD_REQUEST, "Failed to apply the group meal expense", null)
             }
-            applyservice.createExpense(applyData)
-            return ResponseVo(200, "Apply successfully", null)
+            //if createExpense succeed, send msg to activemq
+            if(applyservice.createExpense(applyData)) applyservice.sendMsg(applyData.userId)
+            return ResponseVo(HttpStatus.CREATED, "Apply successfully", null)
         } catch (e: Exception) {
-            //todo: how to split catching sendMsg from apply?
-            println("Failed to apply expense: ${gson.toJson(applyData)} ,reason:$e") // without toJson, only address will be printed
-            return ResponseVo(400, "Failed to apply expense", null)
+            log.debug("Failed to apply expense: ${gson.toJson(applyData)}") // without toJson, only address will be printed
+            return ResponseVo(HttpStatus.BAD_REQUEST, "Failed , reason:$e", null)// could catch multiple exception from createExpense() and sendMsg()
         }
 
     }
@@ -79,10 +77,10 @@ class ApplyController(val applyservice: ApplyService,private val gson: Gson = Gs
 
         try {
             var result = applyservice.getExpenseById(expenseId)
-            return ResponseVo(200, "get expense info successfully", result.get())
+            return ResponseVo(HttpStatus.ACCEPTED, "get expense info successfully", result.get())
         } catch (e: Exception) {
             println("Failed to get expense info, id: $expenseId")
-            return ResponseVo(400, "Failed to get expense info", null)
+            return ResponseVo(HttpStatus.BAD_REQUEST, "Failed to get expense info", null)
         }
     }
 }

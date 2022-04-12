@@ -4,8 +4,7 @@ import com.joanne.expenseservice.service.MailService
 import com.joanne.expenseservice.vo.MailObject
 import org.springframework.jms.annotation.JmsListener
 import org.springframework.web.bind.annotation.RestController
-
-@RestController
+@RestController //must-have
 class ExpenseConsumer(val mailService: MailService) {
 
     @JmsListener(destination = "approver-queue")
